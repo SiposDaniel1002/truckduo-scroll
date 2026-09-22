@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Keeps the layout from shifting when the product pop-up hides the scrollbar. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  @apply bg-ink font-sans text-white antialiased;
+}
