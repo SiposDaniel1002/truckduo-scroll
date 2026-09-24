@@ -6,6 +6,18 @@
   color-scheme: dark;
 }
 
+/* Arial scaled to Inter's width and line metrics. Text drawn before Inter arrives already takes
+   Inter's space, so the swap doesn't move the navbar or re-wrap the hero (layout shift).
+   Where Arial isn't installed (Android) the stack falls through to system-ui as before. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   /* Keeps the layout from shifting when the product pop-up hides the scrollbar. */
@@ -14,4 +26,35 @@ html {
 
 body {
   @apply bg-ink font-sans text-white antialiased;
+}
+
+/* Long-form legal text inside the footer dialogs. All colours clear WCAG AA on #111. */
+@layer components {
+  .legal-prose {
+    @apply space-y-4 text-sm leading-relaxed text-white/80 md:text-base;
+  }
+  .legal-prose h3 {
+    @apply pt-4 text-sm font-bold uppercase tracking-wider text-white md:text-base;
+  }
+  .legal-prose ul {
+    @apply list-disc space-y-2 pl-5 marker:text-[#f97316];
+  }
+  .legal-prose dl {
+    @apply grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-[max-content_1fr];
+  }
+  .legal-prose dt {
+    @apply text-white/60 max-sm:mt-2;
+  }
+  .legal-prose dd {
+    @apply text-white;
+  }
+  .legal-prose a {
+    @apply break-words text-[#f97316] underline underline-offset-2 hover:text-[#fb8b3c];
+  }
+  .legal-prose strong {
+    @apply font-semibold text-white;
+  }
+  .legal-prose .legal-effective {
+    @apply text-xs uppercase tracking-widest text-white/60;
+  }
 }

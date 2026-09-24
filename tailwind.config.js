@@ -10,7 +10,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', '"Segoe UI"', 'Arial', 'sans-serif'],
+        sans: ['Inter', '"Inter Fallback"', 'system-ui', '-apple-system', '"Segoe UI"', 'Arial', 'sans-serif'],
         logo: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
         // Brand-ticker faces approximating each manufacturer's wordmark.
         'brand-block': ['"Archivo Black"', 'Inter', 'sans-serif'],

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 // Each wordmark gets its own face to approximate the real logo.
 const BRANDS = [
   { name: 'SCANIA', className: 'font-logo font-bold tracking-widest' },
@@ -16,8 +18,28 @@ const BRANDS = [
 ]
 
 export default function BrandMarquee() {
+  const ref = useRef<HTMLDivElement>(null)
+
+  // The wordmark faces are only needed here, several screens down. Their text is in the DOM from
+  // the start, so left in the main CSS they would download at top priority alongside the hero
+  // photo; instead they are fetched once the ticker is about a screen away.
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        observer.disconnect()
+        void import('../fonts-ticker')
+      },
+      { rootMargin: '100% 0px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div className="overflow-hidden py-10 md:py-14">
+    <div ref={ref} className="overflow-hidden py-10 md:py-14">
       {/* Phone copies are ~25% narrower; a shorter loop keeps the speed at ~52px/s everywhere. */}
       <div className="flex w-max animate-marquee max-md:[animation-duration:44s] motion-reduce:animate-none">
         {[0, 1].map((copy) => (

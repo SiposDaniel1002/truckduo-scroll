@@ -10,6 +10,9 @@ export default function App() {
     <>
       <Navbar />
       <main>
+        {/* The visible headings are per-section h2s; this gives the page its single top-level
+            heading for screen readers and search engines without changing the design. */}
+        <h1 className="sr-only">Truck Duo – jármű alkatrészek Békéscsabán</h1>
         <ScrollCarousel />
         <AboutReviews />
         <Products />

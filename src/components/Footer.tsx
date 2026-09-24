@@ -1,4 +1,8 @@
+import { useRef, useState } from 'react'
 import { Facebook } from 'lucide-react'
+import { COMPANY } from '../data/company'
+import { LEGAL_DOCS, type LegalDoc } from '../data/legal'
+import LegalDialog from './LegalDialog'
 
 const LINKS = [
   { label: 'TERMÉKEK', href: '#termekek' },
@@ -7,10 +11,19 @@ const LINKS = [
   { label: 'KAPCSOLAT', href: '#kapcsolat' },
 ]
 
-// Placeholder until the company's own Facebook page URL is known.
-const FACEBOOK_URL = 'https://www.facebook.com/'
+const FACEBOOK_URL = 'https://www.facebook.com/truckduo'
 
 export default function Footer() {
+  const legalRef = useRef<HTMLDialogElement>(null)
+  const [legalDoc, setLegalDoc] = useState<LegalDoc | null>(null)
+
+  const openLegal = (doc: LegalDoc) => {
+    setLegalDoc(doc)
+    // Stop the page scrolling behind the document; restored when the dialog closes.
+    document.documentElement.style.overflow = 'hidden'
+    legalRef.current?.showModal()
+  }
+
   return (
     <footer className="bg-[#0a0a0a] border-t border-white/10">
       <div className="max-w-[1400px] mx-auto px-6 py-10 md:py-12">
@@ -51,10 +64,31 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="text-white/30 text-xs mt-10 md:mt-12 text-center w-full block">
+        {/* white/50 and white/60 are the faintest steps that reach WCAG AA (4.5:1) on #0a0a0a. */}
+        <p className="text-white/50 text-xs mt-10 md:mt-12 text-center w-full block">
           © 2026 Truck Duo Kft. Minden jog fenntartva.
         </p>
+
+        {/* The registered seat lives here and in the legal documents; the Kapcsolat card shows the
+            shop, which is where customers actually go. */}
+        <p className="text-white/50 text-xs mt-2 text-center w-full block">Székhely: {COMPANY.seat}</p>
+
+        <div className="gap-4 flex flex-wrap justify-center mt-2">
+          {LEGAL_DOCS.map((doc) => (
+            <button
+              key={doc.id}
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() => openLegal(doc)}
+              className="text-white/60 text-xs hover:text-white transition-colors"
+            >
+              {doc.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      <LegalDialog dialogRef={legalRef} doc={legalDoc} />
     </footer>
   )
 }

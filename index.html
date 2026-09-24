@@ -4,21 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a0a" />
-    <title>Truck Duo — Jármű alkatrészek és kiegészítők</title>
+    <title>Truck Duo — Jármű alkatrészek</title>
     <meta
       name="description"
-      content="Truck Duo webshop: kamion, személyautó, motor és kerékpár alkatrészek, kiegészítők megbízható minőségben."
+      content="Truck Duo Kft. alkatrész-kereskedés Békéscsabán (Szarvasi út 47.): kamion, személyautó, motor és utánfutó alkatrészek, kiegészítők megbízható minőségben."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- "td" in the logo's Montserrat Black, as outlined paths (favicons can't load web fonts).
+         sizes on the PNG keeps browsers that support SVG from preferring the bitmap. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- The first hero photo is the Largest Contentful Paint element, but React only creates
+         its <img> after the script runs; preloading lets the download start with the HTML.
+         imagesrcset/imagesizes must stay identical to that <img>'s srcset/sizes
+         (src/data/categories.ts, photoSizes in ScrollCarousel.tsx) or the photo downloads twice.
+         No href, so browsers without imagesrcset skip the preload instead of guessing a width. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Brand-ticker faces, subset to capital letters and the hyphen only. -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@700&family=Cormorant+Garamond:wght@700&family=Michroma&family=Oswald:wght@700&family=Roboto+Slab:wght@700&family=Syncopate:wght@700&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ-&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      type="image/webp"
+      imagesrcset="/src/assets/kamion-pic-640.webp 640w, /src/assets/kamion-pic-1024.webp 1024w, /src/assets/kamion-pic-1440.webp 1440w, /src/assets/kamion-pic.webp 1920w"
+      imagesizes="(max-width: 767px) calc(50vh * 1.333), calc(80vh * 1.333)"
+      fetchpriority="high"
     />
   </head>
   <body>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Quote, Star } from 'lucide-react'
-import kamionPic from '../assets/kamion-pic.jpg'
+// Blurred backdrop: the 640px copy looks the same under the blur at a fraction of the bytes.
+import kamionPic from '../assets/kamion-pic-640.webp'
 
 const REVIEWS = [
   {
@@ -40,6 +41,8 @@ export default function AboutReviews() {
         src={kamionPic}
         alt=""
         aria-hidden="true"
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full scale-110 object-cover blur-lg"
       />
       <div className="absolute inset-0 bg-black/70" />

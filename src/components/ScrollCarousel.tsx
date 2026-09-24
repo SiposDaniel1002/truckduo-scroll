@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { categories, type VehicleCategory } from '../data/categories'
 import ArrowCta from './ArrowCta'
@@ -24,9 +24,23 @@ function SlideBody({ category, sizer = false }: { category: VehicleCategory; siz
   )
 }
 
+// The width the photo is drawn at, for srcset. object-cover fills the frame's height with
+// landscape photos, so the drawn width is the frame height times the photo's aspect ratio.
+// Frame height: at most 50vh on phones, up to 80vh from md. index.html preloads slide 1
+// with the same string.
+const photoSizes = ({ imgWidth, imgHeight }: VehicleCategory) => {
+  const aspect = +(imgWidth / imgHeight).toFixed(3)
+  return `(max-width: 767px) calc(50vh * ${aspect}), calc(80vh * ${aspect})`
+}
+
 export default function ScrollCarousel() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [heroLoaded, setHeroLoaded] = useState(false)
+  // A preloaded photo can finish before React attaches onLoad.
+  const firstPhotoRef = useCallback((img: HTMLImageElement | null) => {
+    if (img?.complete) setHeroLoaded(true)
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -79,17 +93,34 @@ export default function ScrollCarousel() {
               short screens don't push the photo up under the fixed navbar. */}
           <div className="w-full md:w-1/2 relative flex-1 min-h-0 max-h-[50vh] md:flex-none md:h-[min(80vh,calc(100vh-10rem))] md:max-h-none">
             <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-              {categories.map((category, index) => (
-                <img
-                  key={category.id}
-                  src={category.img}
-                  alt={`${category.title} — ${category.category}`}
-                  decoding="async"
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
-                    index === activeIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-                  }`}
-                />
-              ))}
+              {categories.map((category, index) =>
+                // Slide 1 is the Largest Contentful Paint element: fetch it first (it is also
+                // preloaded in index.html). The others share the same spot at opacity 0, so they
+                // count as in-viewport and lazy loading alone wouldn't hold them back; they are
+                // mounted once slide 1 has loaded (or as soon as the reader scrolls to them).
+                index === 0 || heroLoaded || index === activeIndex ? (
+                  <img
+                    key={category.id}
+                    ref={index === 0 ? firstPhotoRef : undefined}
+                    src={category.img}
+                    srcSet={category.srcSet}
+                    sizes={photoSizes(category)}
+                    alt={`${category.title} — ${category.category}`}
+                    width={category.imgWidth}
+                    height={category.imgHeight}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    // React 18 doesn't know the camelCase fetchPriority prop (it arrives in 19) and
+                    // warns about it; the lowercase attribute passes straight through to the DOM.
+                    {...{ fetchpriority: index === 0 ? 'high' : 'low' }}
+                    decoding={index === 0 ? undefined : 'async'}
+                    onLoad={index === 0 ? () => setHeroLoaded(true) : undefined}
+                    onError={index === 0 ? () => setHeroLoaded(true) : undefined}
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
+                      index === activeIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+                    }`}
+                  />
+                ) : null,
+              )}
             </div>
           </div>
         </div>
