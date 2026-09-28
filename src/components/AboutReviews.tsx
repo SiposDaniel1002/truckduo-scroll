@@ -58,8 +58,8 @@ export default function AboutReviews() {
 
             <p className="mt-6 max-w-xl leading-relaxed text-white/70">
               A Truck Duo Kft. több éves tapasztalattal, széles alkatrész-választékkal és szuper árakkal
-              várja vásárlóit. Csapatunk igazi profikból áll, akik készséggel segítenek megtalálni a
-              megfelelő alkatrészt, legyen szó teherautóról vagy utánfutóról.
+              várja vásárlóit Békés megyében. Csapatunk igazi profikból áll, akik készséggel segítenek
+              megtalálni a megfelelő alkatrészt, legyen szó kamionról, utánfutóról vagy Simson motorról.
             </p>
           </div>
 
